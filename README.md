@@ -38,7 +38,7 @@ PowerShell:
 docker run --rm --mount "type=bind,source=$($PWD.Path),target=/app" --workdir /app composer:local composer install
 ```
 
-The container runs as root by default; files created in a bind mount may be owned by root on Linux. This repository contains the image setup, without an application or `composer.json`.
+The container runs as the non-root `composer` user (UID/GID `1000:1000`), with a writable home directory at `/home/composer`. On Linux, the mounted application directory must be writable by this user so Composer can create `vendor` and update the lock file. This repository contains the image setup, without an application or `composer.json`.
 
 ## GitHub Actions
 
