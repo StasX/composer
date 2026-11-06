@@ -1,0 +1,2 @@
+# Composer runs as a CLI command; there is no persistent service to health-check.
+DS-0026

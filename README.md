@@ -85,6 +85,6 @@ Download reports from the workflow run's **Artifacts** section. They are retaine
 
 Steps skipped because of earlier failures do not produce reports. A failed build still produces `docker-build.log`, while image metadata is available only after a successful build.
 
-### Current image-scan prerequisite
+### Trivy exceptions
 
-The workflow mounts `.trivyignore` from the repository root, but that file is currently absent. Before running the image scan, either add the file (empty if no exceptions are needed) or remove its bind mount and the `--ignorefile` argument from the workflow. Otherwise, Docker fails before Trivy can scan the image.
+The workflow mounts `.trivyignore` from the repository root for both Trivy scans. It ignores only `DS-0026` (missing health check), because this image runs CLI commands rather than a persistent service. No vulnerability exceptions are configured.

@@ -1,4 +1,4 @@
-﻿name: Dockerfile scans and image publishing
+name: Dockerfile scans and image publishing
 on:
   push:
   pull_request:
@@ -35,7 +35,7 @@ jobs:
             hadolint) docker run --rm --mount "type=bind,source=$GITHUB_WORKSPACE,target=/workspace,readonly" --workdir /workspace --entrypoint /bin/hadolint hadolint/hadolint:v2.15.1 --format json Dockerfile 2> >(tee "$REPORT_DIR/hadolint.log" >&2) | tee "$REPORT_DIR/hadolint.json" ;;
             checkov) docker run --rm --mount "type=bind,source=$GITHUB_WORKSPACE,target=/workspace,readonly" --workdir /workspace --entrypoint checkov ghcr.io/bridgecrewio/checkov:3.4.3 --file Dockerfile --framework dockerfile --skip-download --skip-check CKV_DOCKER_2 --output json 2> >(tee "$REPORT_DIR/checkov.log" >&2) | tee "$REPORT_DIR/checkov.json" ;;
             semgrep) docker run --rm --mount "type=bind,source=$GITHUB_WORKSPACE,target=/workspace,readonly" --workdir /workspace --entrypoint semgrep semgrep/semgrep:1.183.0 scan --config p/dockerfile --error --strict --metrics=off --json Dockerfile 2> >(tee "$REPORT_DIR/semgrep.log" >&2) | tee "$REPORT_DIR/semgrep.json" ;;
-            trivy-dockerfile) docker run --rm --mount "type=bind,source=$GITHUB_WORKSPACE/Dockerfile,target=/scan/Dockerfile,readonly" aquasec/trivy:0.76.1 config --exit-code 1 --misconfig-scanners dockerfile --format json /scan 2> >(tee "$REPORT_DIR/trivy-dockerfile.log" >&2) | tee "$REPORT_DIR/trivy-dockerfile.json" ;;
+            trivy-dockerfile) docker run --rm --mount "type=bind,source=$GITHUB_WORKSPACE/Dockerfile,target=/scan/Dockerfile,readonly" --mount "type=bind,source=$GITHUB_WORKSPACE/.trivyignore,target=/scan/.trivyignore,readonly" aquasec/trivy:0.76.1 config --ignorefile /scan/.trivyignore --exit-code 1 --misconfig-scanners dockerfile --format json /scan 2> >(tee "$REPORT_DIR/trivy-dockerfile.log" >&2) | tee "$REPORT_DIR/trivy-dockerfile.json" ;;
           esac
       - name: Upload scanner report
         if: always()

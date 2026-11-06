@@ -1,5 +1,3 @@
-# Composer runs as a CLI command; there is no persistent service to health-check.
-# trivy:ignore:AVD-DS-0026
 FROM php:8.5-cli-alpine3.24
 RUN apk upgrade --no-cache
 COPY . /
@@ -9,4 +7,4 @@ RUN addgroup -S -g 1000 composer \
     && chown -R composer:composer /backend
 ENV HOME=/backend
 WORKDIR /backend
-USER composer
+USER 1000:1000
