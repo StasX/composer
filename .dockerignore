@@ -5,3 +5,6 @@ Dockerfile
 .gitattributes
 .gitignore
 README.md
+.github
+.trivyignore
+LICENSE
